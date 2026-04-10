@@ -1,11 +1,16 @@
 import OpenAI from "openai";
 
-const model = "gpt-4.1-mini";
+const model = "grok-3";// process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4";
 
 export function createAIClient(apiKey) {
-    return new OpenAI({ apiKey });
+    return new OpenAI({
+        apiKey: process.env.AZURE_OPENAI_API_KEY,
+        baseURL: process.env.AZURE_OPENAI_ENDPOINT
+    });
 }
 
+
+// Update the API calls to use chat.completions.create
 export async function generateSummary(client, text, length = "medium") {
     const lengthInstructions = {
         short: "Write a short, concise summary in 3-5 sentences.",
@@ -15,21 +20,23 @@ export async function generateSummary(client, text, length = "medium") {
 
     const prompt = `You are an assistant that summarizes document text. ${lengthInstructions[length] || lengthInstructions.medium}\n\nDocument text:\n${text}`;
 
-    const response = await client.responses.create({
-        model,
-        input: prompt
+    // console.log(prompt);
+
+    const response = await client.chat.completions.create({
+        model: model,
+        messages: [{ role: "user", content: prompt }],
     });
 
-    return response.output[0]?.content[0]?.text?.trim() || "";
+    return response.choices[0]?.message?.content?.trim() || "";
 }
 
 export async function answerQuestion(client, text, question) {
     const prompt = `You are an assistant that answers questions using the provided document text. Use only the information in the text and cite the source when possible.\n\nDocument text:\n${text}\n\nQuestion: ${question}`;
 
-    const response = await client.responses.create({
+    const response = await client.chat.completions.create({
         model,
-        input: prompt
+        messages: [{ role: "user", content: prompt }],
     });
 
-    return response.output[0]?.content[0]?.text?.trim() || "";
+    return response.choices[0]?.message?.content?.trim() || "";
 }

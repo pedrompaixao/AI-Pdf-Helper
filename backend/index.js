@@ -12,12 +12,14 @@ const upload = multer({ storage: multer.memoryStorage() });
 const PORT = process.env.PORT || 4000;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
+console.log(OPENAI_API_KEY)
+
 if (!OPENAI_API_KEY) {
     console.error("Missing OPENAI_API_KEY in environment variables.");
     process.exit(1);
 }
 
-const aiClient = createAIClient(OPENAI_API_KEY);
+const aiClient = createAIClient("");
 
 app.use(cors({ origin: true }));
 app.use(express.json());
