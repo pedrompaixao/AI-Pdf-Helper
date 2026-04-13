@@ -1,11 +1,15 @@
 import OpenAI from "openai";
+import { config, validateConfig } from "./config.js";
 
-const model = "grok-3";// process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4";
+const model = config.azureOpenAiDeployment || "gpt-4";
 
-export function createAIClient(apiKey) {
+export function createAIClient() {
+    validateConfig();
+
     return new OpenAI({
-        apiKey: process.env.AZURE_OPENAI_API_KEY,
-        baseURL: process.env.AZURE_OPENAI_ENDPOINT
+        apiKey: config.azureOpenAiApiKey,
+        baseURL: config.azureOpenAiEndpoint,
+        apiVersion: config.azureOpenAiApiVersion,
     });
 }
 
@@ -23,7 +27,7 @@ export async function generateSummary(client, text, length = "medium") {
     // console.log(prompt);
 
     const response = await client.chat.completions.create({
-        model: model,
+        model,
         messages: [{ role: "user", content: prompt }],
     });
 

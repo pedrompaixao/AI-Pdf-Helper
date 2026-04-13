@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import SignupForm from "../components/SignupForm";
 import StatusFooter from "../components/StatusFooter";
 import { signupUser } from "../api";
@@ -10,6 +11,7 @@ function SignupPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [status, setStatus] = useState("");
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleSignup = async () => {
         if (password !== confirmPassword) {
@@ -28,11 +30,7 @@ function SignupPage() {
         setPassword("");
         setConfirmPassword("");
         setStatus("Signup successful. Logging you in...");
-        // Store token and user in localStorage
-        localStorage.setItem("authToken", data.token);
-        localStorage.setItem("authUser", JSON.stringify(data.user));
-        // Navigate to dashboard
-        navigate("/dashboard");
+        login(data.token, data.user);
     };
 
     return (

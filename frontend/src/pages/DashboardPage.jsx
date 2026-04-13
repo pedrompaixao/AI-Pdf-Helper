@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import FileUpload from "../components/FileUpload";
 import ExtractedText from "../components/ExtractedText";
 import SummaryControls from "../components/SummaryControls";
@@ -7,7 +7,7 @@ import QaControls from "../components/QaControls";
 import StatusFooter from "../components/StatusFooter";
 import { uploadPdf, fetchSummary, fetchAnswer } from "../api";
 
-function DashboardPage({ user }) {
+function DashboardPage() {
     const [file, setFile] = useState(null);
     const [status, setStatus] = useState("");
     const [text, setText] = useState("");
@@ -15,7 +15,7 @@ function DashboardPage({ user }) {
     const [lengthOption, setLengthOption] = useState("medium");
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
-    const navigate = useNavigate();
+    const { user, logout } = useAuth();
 
     const handleFileChange = (event) => {
         setFile(event.target.files?.[0] || null);
@@ -74,11 +74,7 @@ function DashboardPage({ user }) {
         setAnswer("");
         setFile(null);
         setStatus("Logged out.");
-        // Clear localStorage
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("authUser");
-        // Navigate to landing page
-        navigate("/");
+        logout();
     };
 
     return (

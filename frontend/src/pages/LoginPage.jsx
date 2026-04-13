@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import LoginForm from "../components/LoginForm";
 import StatusFooter from "../components/StatusFooter";
 import { loginUser } from "../api";
@@ -9,6 +10,7 @@ function LoginPage() {
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState("");
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleLogin = async () => {
         setStatus("Logging in...");
@@ -21,11 +23,7 @@ function LoginPage() {
         setEmail("");
         setPassword("");
         setStatus("Login successful.");
-        // Store token and user in localStorage
-        localStorage.setItem("authToken", data.token);
-        localStorage.setItem("authUser", JSON.stringify(data.user));
-        // Navigate to dashboard
-        navigate("/dashboard");
+        login(data.token, data.user);
     };
 
     return (
