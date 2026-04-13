@@ -13,7 +13,6 @@ export function createAIClient() {
     });
 }
 
-
 // Update the API calls to use chat.completions.create
 export async function generateSummary(client, text, length = "medium") {
     const lengthInstructions = {
