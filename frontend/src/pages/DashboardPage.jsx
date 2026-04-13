@@ -80,7 +80,7 @@ function DashboardPage() {
     return (
         <div className="app-shell">
             <header>
-                <h1>AI-Pdf-Helper</h1>
+                <h1>Pdf Helper</h1>
                 <p>Upload a PDF, extract text, summarize it, and ask questions.</p>
             </header>
 
